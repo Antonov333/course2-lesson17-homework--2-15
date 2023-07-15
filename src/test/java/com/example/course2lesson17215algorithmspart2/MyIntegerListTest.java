@@ -1,10 +1,12 @@
 package com.example.course2lesson17215algorithmspart2;
 
+import com.example.course2lesson17215algorithmspart2.exceptions.IntegerListException;
 import com.example.course2lesson17215algorithmspart2.implementations.MyIntegerList;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -162,6 +164,7 @@ public class MyIntegerListTest {
         System.out.println("Sort duration: " + (System.currentTimeMillis() - start));
     }
 
+
     private MyIntegerList randomlyFilledIntegerList(int size) {
         MyIntegerList integerList = new MyIntegerList(size);
         for (int i = 0; i < size; i++) {
@@ -170,4 +173,129 @@ public class MyIntegerListTest {
         return integerList;
     }
 
+    @Test
+    public void indexOfTest() {
+        MyIntegerList testIntegerList = randomlyFilledIntegerList(50);
+        Integer testItem;
+
+        do {
+            testItem = random().nextInt(0, 10000);
+        }
+        while (testIntegerList.contains(testItem));
+
+        int indexCount = 3;
+        int[] indexes = new int[indexCount + 1];
+        indexes[0] = -1;
+        for (int i = 1; i <= indexCount; i++) {
+            indexes[i] = random().nextInt(indexes[i - 1] + 1, testIntegerList.size() - 1);
+            testIntegerList.set(indexes[i], testItem);
+        }
+        assertEquals(indexes[1], testIntegerList.indexOf(testItem));
+    }
+
+    @Test
+    public void lastIndexOfTest() {
+        MyIntegerList testInegerList = randomlyFilledIntegerList(15);
+        int firstTestPatternPosition = random().nextInt(0, 5);
+        int middleTestPatterPosition = random().nextInt(6, 10);
+        int lastTestPatternPosition = random().nextInt(11, 15);
+
+        Integer testPattern = random().nextInt(0, 10000);
+
+        while (testInegerList.contains(testPattern)) {
+            testPattern = random().nextInt(0, 1000000);
+        }
+
+        testInegerList.set(firstTestPatternPosition, testPattern);
+        testInegerList.set(middleTestPatterPosition, testPattern);
+        testInegerList.set(lastTestPatternPosition, testPattern);
+
+        assertEquals(lastTestPatternPosition, testInegerList.lastIndexOf(testPattern));
+
+        Integer missingPattern = random().nextInt(1000000);
+        while (testInegerList.contains(missingPattern)) {
+            missingPattern = random().nextInt(1000000);
+        }
+
+        assertEquals(testInegerList.lastIndexOf(missingPattern), -1);
+
+    }
+
+    @Test
+    public void equalsTest() {
+        int testListSize = random().nextInt(10, 1000);
+        MyIntegerList testIntegerList = randomlyFilledIntegerList(testListSize);
+        MyIntegerList sameIntegerList = new MyIntegerList(Arrays.copyOf(testIntegerList.toArray(), testListSize));
+        MyIntegerList differentInegerList = randomlyFilledIntegerList(testListSize + 1);
+        assertTrue(testIntegerList.equals(sameIntegerList));
+        assertFalse(testIntegerList.equals(differentInegerList));
+    }
+
+    @Test
+    public void getTest() {
+        MyIntegerList testIntegerList = randomlyFilledIntegerList(random().nextInt(5, 50));
+        Integer[] array = testIntegerList.toArray();
+        int index = random().nextInt(0, testIntegerList.size() - 1);
+        assertEquals(array[index], testIntegerList.get(index));
+
+        int capacity = random().nextInt(10, 100);
+        testIntegerList = randomlyFilledIntegerList(capacity);
+        MyIntegerList finalTIL = testIntegerList;
+        assertThrows(IntegerListException.class, () -> finalTIL.get(-1));
+        assertThrows(IntegerListException.class, () -> finalTIL.get(finalTIL.size()));
+    }
+
+    @Test
+    public void setTest() {
+        MyIntegerList testIntegerList = randomlyFilledIntegerList(random().nextInt(5, 50000));
+        Integer testItem = random().nextInt(1000000);
+        while (testIntegerList.contains(testItem)) {
+            testItem = random().nextInt(1000000);
+        }
+        int index = random().nextInt(0, testIntegerList.size() - 1);
+        Integer returnedItem = testIntegerList.set(index, testItem);
+        assertEquals(testItem, returnedItem);
+        assertEquals(testItem, testIntegerList.get(index));
+
+        Integer finalTestItem = testItem;
+        assertThrows(IntegerListException.class, () -> testIntegerList.set(-1, finalTestItem));
+        assertThrows(IntegerListException.class, () -> testIntegerList.set(testIntegerList.size() + 1, finalTestItem));
+    }
+
+    @Test
+    public void isEmptyTest() {
+        MyIntegerList emptyList = new MyIntegerList();
+        assertTrue(emptyList.isEmpty());
+        MyIntegerList listWithElements = randomlyFilledIntegerList(5);
+        assertFalse(listWithElements.isEmpty());
+    }
+
+    @Test
+    public void sizeTest() {
+        int testSize = random().nextInt(1, 100000);
+        MyIntegerList testList = randomlyFilledIntegerList(testSize);
+        assertEquals(testSize, testList.size());
+    }
+
+    @Test
+    public void clearTest() {
+        int testSize = random().nextInt(5, 5000);
+        MyIntegerList testList = randomlyFilledIntegerList(testSize);
+        assertNotNull(testList.get(random().nextInt(0, testSize)));
+        testList.clear();
+        assertEquals(0, testList.size());
+        assertThrows(IntegerListException.class, () -> testList.get(0));
+    }
+
+    @Test
+    public void toArrayTest() {
+        int testArraySize = random().nextInt(1, 100000);
+        Integer[] sampleArray = new Integer[testArraySize];
+        for (Integer s : sampleArray
+        ) {
+            s = random().nextInt(100000);
+        }
+        MyIntegerList testIntegerList = new MyIntegerList(sampleArray);
+        Arrays.equals(sampleArray, testIntegerList.toArray());
+    }
 }

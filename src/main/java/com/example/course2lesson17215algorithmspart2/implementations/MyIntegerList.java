@@ -162,6 +162,7 @@ public class MyIntegerList implements IntegerList {
 
     @Override
     public Integer get(int index) {
+        checkIndex(index);
         return storage[index];
     }
 
@@ -323,7 +324,7 @@ public class MyIntegerList implements IntegerList {
         storage[indexB] = tmp;
     }
 
-    public void putArray(Integer[] array) {
+    private void putArray(Integer[] array) {
         storage = Arrays.copyOf(array, array.length);
     }
 }
