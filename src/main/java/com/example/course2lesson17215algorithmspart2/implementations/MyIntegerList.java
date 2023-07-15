@@ -50,9 +50,7 @@ public class MyIntegerList implements IntegerList {
     private void doubleStorage() {
         int lengthOfExistingArray = storage.length;
         Integer[] storageDoubled = new Integer[lengthOfExistingArray * 2];
-        for (int i = 0; i < lengthOfExistingArray; i++) {
-            storageDoubled[i] = storage[i];
-        }
+        System.arraycopy(storage, 0, storageDoubled, 0, lengthOfExistingArray);
         storage = storageDoubled;
     }
 
@@ -140,10 +138,6 @@ public class MyIntegerList implements IntegerList {
         return false;
     }
 
-    private void insert(int index, Integer item) {
-
-    }
-
     @Override
     public int indexOf(Integer item) {
         int index = 0;
@@ -223,49 +217,104 @@ public class MyIntegerList implements IntegerList {
                 }
             }
         }
-        return;
+    }
+
+    public void sortBySelectionVector() {
+        ValueAndIndex valueAndIndex = new ValueAndIndex();
+        for (int i = 0; i < count; i++) {
+            valueAndIndex = getMin(i);
+            if (valueAndIndex.getValue() < storage[i]) {
+                swapItems(i, valueAndIndex.getIndex());
+            }
+        }
     }
 
     public void sortBySelection() {
-        Integer element = storage[0];
-
-        for (int i = 0; i < count - 2; i++) {
-            element = storage[i];
-            int iom = getIndexOfMin(storage, i + 1);
-            if (element > storage[iom]) {
-                swapItems(i, iom);
+        int indexOfMin;
+        for (int i = 0; i < count; i++) {
+            indexOfMin = getIndexOfMin(i);
+            if (storage[i] > storage[indexOfMin]) {
+                swapItems(i, indexOfMin);
             }
+        }
+    }
+
+    public void sort() {
+        sortBySelection();
+    }
+
+    private int getIndexOfMin(int startIndex) {
+        checkIndex(startIndex);
+        int result = startIndex;
+        for (int i = startIndex; i < count; i++) {
+            if (storage[result] > storage[i]) {
+                result = i;
+            }
+        }
+        return result;
+    }
+
+    private ValueAndIndex getMin(int startIndex) {
+        checkIndex(startIndex);
+        ValueAndIndex result = new ValueAndIndex(storage[startIndex], startIndex);
+        for (int i = startIndex; i < count; i++) {
+            if (result.getValue() > storage[i]) {
+                result.setIndex(i);
+                result.setValue(storage[i]);
+            }
+        }
+        return result;
+    }
+
+    class ValueAndIndex {
+        private Integer value;
+        private int index;
+
+        public ValueAndIndex() {
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+
+        public void setValue(Integer value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return "ValueAndIndex{" +
+                    "value=" + value +
+                    ", index=" + index +
+                    '}';
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
+        }
+
+        public ValueAndIndex(Integer value, int index) {
+            this.value = value;
+            this.index = index;
         }
     }
 
     public void bubbleSort() {
-        int length = storage.length ;
-        if (length < 2) { return ; }
-        for (int i = 0; i < length - 1 ; i++) {
-            for (int j = 0 ; j < length-1-i ; j++) {
-                if (storage[j] > storage[j+1]) {
-                    swapItems(j,j+1);
+        int length = storage.length;
+        if (length < 2) {
+            return;
+        }
+        for (int i = 0; i < length - 1; i++) {
+            for (int j = 0; j < length - 1 - i; j++) {
+                if (storage[j] > storage[j + 1]) {
+                    swapItems(j, j + 1);
                 }
             }
         }
-    }
-
-    private int getIndexOfMin(Integer[] array, int startIndex) {
-        int length = array.length;
-        if (startIndex < 0 || startIndex >= length) { throw new IntegerListException("startIndex invalid"); }
-        if (array == null || length == 0) { throw new IntegerListException("array is null or empty"); }
-
-        if (length == 1) return 0;
-
-        Integer minimum = array[0];
-        int indexOfMin = 0;
-        for (int i = 1; i < array.length - 1; i++) {
-            if (array[i] < minimum) {
-                minimum = array[i];
-                indexOfMin = i;
-            }
-        }
-        return indexOfMin;
     }
 
     private void swapItems(int indexA, int indexB) {
@@ -277,5 +326,4 @@ public class MyIntegerList implements IntegerList {
     public void putArray(Integer[] array) {
         storage = Arrays.copyOf(array, array.length);
     }
-
 }
