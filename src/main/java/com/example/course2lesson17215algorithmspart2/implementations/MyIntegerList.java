@@ -128,14 +128,21 @@ public class MyIntegerList implements IntegerList {
         return item;
     }
 
-    @Override
-    public boolean contains(Integer item) {
+    public boolean containsOld(Integer item) {
         for (Integer i : storage) {
             if (i.equals(item)) {
                 return true;
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean contains(Integer item) {
+        Integer[] storageTmp = Arrays.copyOf(storage, count);
+        MyIntegerList listTmp = new MyIntegerList(storageTmp);
+        listTmp.sort();
+        return (listTmp.binarySearch(item) >= 0);
     }
 
     @Override
@@ -326,5 +333,9 @@ public class MyIntegerList implements IntegerList {
 
     private void putArray(Integer[] array) {
         storage = Arrays.copyOf(array, array.length);
+    }
+
+    public Integer binarySearch(Integer item) {
+        return Arrays.binarySearch(toArray(), item);
     }
 }

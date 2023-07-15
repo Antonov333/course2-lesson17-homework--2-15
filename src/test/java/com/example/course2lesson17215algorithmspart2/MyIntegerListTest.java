@@ -71,7 +71,7 @@ public class MyIntegerListTest {
     public void removeByIndexTest() {
 
         MyIntegerList testIntegerList = randomlyFilledIntegerList(random().nextInt(5, 1000));
-        
+
         int testIndex = random().nextInt(0, testIntegerList.size());
         Integer testItem = random().nextInt(1000000, 2000000);
         while (testIntegerList.contains(testItem)) {
@@ -255,4 +255,31 @@ public class MyIntegerListTest {
         MyIntegerList testIntegerList = new MyIntegerList(sampleArray);
         Arrays.equals(sampleArray, testIntegerList.toArray());
     }
+
+    @Test
+    public void binarySearchTest() {
+
+        MyIntegerList testIntegerList = randomlyFilledIntegerList(random().nextInt(100, 1000));
+        testIntegerList.sort();
+        Integer testItem = testIntegerList.get(random().nextInt(0, testIntegerList.size()));
+        assertEquals(testItem, testIntegerList.get(testIntegerList.binarySearch(testItem)));
+        Integer missingItem = random().nextInt(100000, 5000000);
+        while (testIntegerList.contains(missingItem)) {
+            missingItem = random().nextInt(100000, 5000000);
+        }
+        assertTrue(testIntegerList.binarySearch(missingItem) < 0);
+    }
+
+    @Test
+    public void containsTest() {
+        MyIntegerList testList = randomlyFilledIntegerList(random().nextInt(1, 10000));
+        Integer testItem = testList.get(random().nextInt(0, testList.size() - 1));
+        assertTrue(testList.contains(testItem));
+        Integer missingItem = 100 + random().nextInt(10, 100);
+        for (int i = 0; i < testList.size(); i++) {
+            testList.set(i, testList.get(i) % 100);
+        }
+        assertFalse(testList.contains(testItem));
+    }
+
 }
