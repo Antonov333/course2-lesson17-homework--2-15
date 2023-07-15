@@ -70,9 +70,8 @@ public class MyIntegerListTest {
     @Test
     public void removeByIndexTest() {
 
-        MyIntegerList testIntegerList = randomlyFilledIntegerList(5);
-
-        System.out.println("testIntegerList.size() = " + testIntegerList.size());
+        MyIntegerList testIntegerList = randomlyFilledIntegerList(random().nextInt(5, 1000));
+        
         int testIndex = random().nextInt(0, testIntegerList.size());
         Integer testItem = random().nextInt(1000000, 2000000);
         while (testIntegerList.contains(testItem)) {
@@ -81,48 +80,6 @@ public class MyIntegerListTest {
         testIntegerList.set(testIndex, testItem);
         assertEquals(testItem, testIntegerList.remove(testIndex));
         assertNotEquals(testItem, testIntegerList.get(testIndex));
-    }
-
-    @Test
-    public void sortByInsertionTest() {
-        MyIntegerList testIntegerList = randomlyFilledIntegerList(100000);
-        long start = System.currentTimeMillis();
-        testIntegerList.sortByInsertion();
-        System.out.println(System.currentTimeMillis() - start);
-    } //13750ms, 12933ms, 12856ms ==> ~13180ms
-
-    @Test
-    public void sortBySelectionTest() {
-        int sizeOfTestArray = 100000;
-        final MyIntegerList testSample = randomlyFilledIntegerList(sizeOfTestArray);
-
-        MyIntegerList testList1 = new MyIntegerList(Arrays.copyOf(testSample.toArray(), sizeOfTestArray));
-        MyIntegerList testList2 = new MyIntegerList(Arrays.copyOf(testSample.toArray(), sizeOfTestArray));
-
-        System.out.println("\ntesting selection sort method with vector data class");
-        long start = System.currentTimeMillis();
-        testList1.sortBySelectionVector();
-        long duration = System.currentTimeMillis() - start;
-        System.out.println("duration = " + duration + "\n");
-
-        System.out.println("testing selection sort method with primitive data");
-        System.out.println("Arrays.equals(myIntegerList1.toArray(), testList1.toArray()) = "
-                + Arrays.equals(testSample.toArray(), testList1.toArray()));
-        System.out.println("Arrays.equals(myIntegerList1.toArray(),testList2.toArray()) = "
-                + Arrays.equals(testSample.toArray(), testList2.toArray()));
-        start = System.currentTimeMillis();
-        testList2.sortBySelection();
-        duration = System.currentTimeMillis() - start;
-        System.out.println("duration = " + duration + "\n");
-    }
-
-    @Test
-    public void bubbleSortTest() {
-        MyIntegerList myIntegerList = randomlyFilledIntegerList(100000);
-        long start = System.currentTimeMillis();
-        myIntegerList.bubbleSort();
-        System.out.println(System.currentTimeMillis() - start);
-        // 31578ms, 31688ms, 31529ms ==> ~ 31598ms
     }
 
     @Test
