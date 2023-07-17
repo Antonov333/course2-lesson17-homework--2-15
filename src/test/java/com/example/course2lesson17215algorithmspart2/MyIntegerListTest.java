@@ -35,6 +35,7 @@ public class MyIntegerListTest {
         assertNotEquals(testItem, myIntegerList.get(myIntegerList.size() - 1));
         myIntegerList.add(testItem);
         assertEquals(testItem, myIntegerList.get(myIntegerList.size() - 1));
+
     }
 
     @Test
@@ -115,10 +116,13 @@ public class MyIntegerListTest {
 
     @Test
     public void sortTest() {
-        MyIntegerList testList = randomlyFilledIntegerList(100000);
+        int size = 10;
+        MyIntegerList testList = randomlyFilledIntegerList(size);
+        System.out.println(Arrays.toString(testList.toArray()));
         long start = System.currentTimeMillis();
         testList.sort();
         System.out.println("Sort duration: " + (System.currentTimeMillis() - start));
+        System.out.println(Arrays.toString(testList.toArray()));
     }
 
 

@@ -40,7 +40,7 @@ public class MyIntegerList implements IntegerList {
         }
         int l = storage.length;
         if (count >= l) {
-            this.doubleStorage();
+            this.grow();
         }
         storage[count] = item;
         count++;
@@ -52,6 +52,13 @@ public class MyIntegerList implements IntegerList {
         Integer[] storageDoubled = new Integer[lengthOfExistingArray * 2];
         System.arraycopy(storage, 0, storageDoubled, 0, lengthOfExistingArray);
         storage = storageDoubled;
+    }
+
+    private void grow() {
+        int lengthOfExistingArray = storage.length;
+        Integer[] storageGrownUp = new Integer[(int) (lengthOfExistingArray * 1.5)];
+        System.arraycopy(storage, 0, storageGrownUp, 0, lengthOfExistingArray);
+        storage = storageGrownUp;
     }
 
     private void checkItem(Integer item) {
@@ -79,7 +86,7 @@ public class MyIntegerList implements IntegerList {
 
         Integer toReturn = item;
         if (count + 1 >= storage.length) {
-            this.doubleStorage();
+            this.grow();
         }
         if (index == count - 1) {
             storage[count] = storage[index];
@@ -247,8 +254,20 @@ public class MyIntegerList implements IntegerList {
         }
     }
 
+    public void sortBySelectionRecursive(int headIndex) {
+        int indexOfMin = getIndexOfMin(headIndex);
+        if (storage[headIndex] > storage[indexOfMin]) {
+            swapItems(headIndex, indexOfMin);
+        }
+        headIndex++;
+        if (headIndex < count) {
+            sortBySelectionRecursive(headIndex);
+        }
+        ;
+    }
+
     public void sort() {
-        sortBySelection();
+        sortBySelectionRecursive(0);
     }
 
     private int getIndexOfMin(int startIndex) {
